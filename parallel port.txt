@@ -1,0 +1,480 @@
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 170
+Unit 9 Parallel Port
+Structure:
+9.1 Introduction
+Objectives 
+9.2 Parallel Port functioning
+Signals and time diagram
+Port operation
+IEEE1284 Modes
+9.3 Troubleshooting
+Preventing parallel port trouble
+Configuration of parallel port device under Windows
+9.4 Summary
+9.5 Glossary
+9.6 Terminal Questions
+9.7 Answers
+9.1 Introduction
+You have seen in unit 4 that buses are used to transfer data from CPU to 
+the peripheral devices connected to it. Port is a hardware that supports the 
+communication between one computer to another computer and other 
+peripheral devices. Parallel port is a device that is used to connect and 
+communicate between computer and various peripherals. In parallel port,
+circuit for collage, decode data and control signals are virtually eliminated 
+because it sends the entire data from computer to printer simultaneously. 
+Though it is simple, parallel port is not free from failures as there may be 
+cable problems, static discharge damage, or continuous hardware defects, 
+leading to printer disconnection. Due to the inadequacy to handle faster 
+peripherals by the conventional bidirectional port, IEEE released a standard 
+for bidirectional parallel peripheral interface signalling method. This method 
+is named as IEEE1284 and it is useful for bidirectional parallel 
+communication.
+In this unit you will study about pin assignment, operation of conventional 
+parallel ports and also the advances that have taken place. You will also 
+study the different modes of IEEE1284 and issues related to the standard.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 171
+Apart from this, the unit will discuss various troubleshooting steps that you 
+could use to separate and rectify port problems. 
+Objectives:
+After studying this unit you will be able to:
+ Describe the operation of the parallel port
+ Identify the advances in the Parallel port
+ Resolve the problems through troubleshooting.
+
+9.2 Parallel port functioning
+The parallel port interface is one of the simplest circuits in the PC. Figure 
+9.1 illustrates a typical bidirectional port. 
+Figure 9.1: Bidirectional Port
+A parallel port consists of three registers:
+The data register 
+The control register
+The status register
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 172
+Address bits A0 to A9 are decoded to determine the active register among 
+the three. –I/OR and –I/OW lines are used to determine whether the signals 
+on the data bus are being read from or written to the specific register. 
+Handshaking signals are bidirectional protocol used between sender and 
+receiver to acknowledge to the sender that the data has been received. 
+These signals are used to trigger the interrupt to request a new character. 
+Data register, the ‘heart’ of a parallel port provides registers to read and 
+write data making it a bidirectional port. It is loaded into the system by 
+passing a value in it to access the printer. The bidirectional control register
+is used to set condition for the CPU so that a new character can be 
+requested and manage the behaviour of the port. For example, when the 
+printer is ready to accept another character the control register is set to 
+generate the interrupt. The status register is used to determine the status of 
+the printer. 
+As you know that the conventional parallel port is implemented in a series of 
+three registers, when one register is used to buffer the 8 data bits, the other 
+two registers handle the handshaking signals of the port. The base address 
+of each port corresponds to the data register. The specific port’s status 
+register is accessed through the base address with an offset value of 01h
+(Identifier 2) while the control register is accessed with an offset value of 
+02h (Identifier 3) 
+9.2.1 Signals and Time diagram
+Signal is any time varying quantity which is generated to produce the 
+interrupt. All signals in the parallel port are compatible with conventional 
+signal levels. Most of the computers use 25-pin sub-miniature D-type 
+female connector. The D-subminiature or D-sub is a common type of 
+electrical connector used particularly in computers. In D type connector D is 
+the prefix for the whole series that denotes the shell size (A=15 pin, B=25 
+pin, C=37 pin, D=50 pin, E=9 pin), followed by the actual number of pins, 
+followed by the gender. Typical diagram of a 25-pin sub miniature is shown 
+in the figure 9.2. At the printer device the parallel connection uses 36-pin 
+connector. This 36-pin connector is called as Centronics type connector.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 173
+Centronics mode is one of the conventional methods of transferring data to 
+the printer in which it does not have handshaking mechanism. The exact 
+reasoning is not clear since 11-pins of the Centronics connector will remain 
+unused. The data sent by the sub miniature D-type connector is to 
+responded by Centronics connector as soon as possible because the data 
+will not reside in the connector for longer time. There are three types of 
+signals - Data signals, handshaking signals and ground signals. The 
+following section describes each signal in detail.
+Figure 9.2: A typical Parallel port cable assembly
+Data signals are the conductors that carry information from the parallel port 
+to or from the printer or other peripheral. There are eight data lines (D0 to 
+D7). These lines are located from pin 2 to pin 9. The pin 1 and pin 0 are 
+occupied by ground signals. Handshaking signals are bidirectional protocol 
+used between sender and receiver to acknowledge to the sender that the 
+data has been received. Ground signals are used to reduce the noise 
+effects in the signal. They also provide common electrical reference 
+between the computer and peripheral. –Initialize signal (-INI) is initialized to 
+ensure that the printer starts. It is active low so that the printer will apply 
+logic 0 to initiate the start. The Select signal (SEL) is used to inform the 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 174
+computer that the component is ready to receive the data. It is active high so 
+that the logic 1 indicates that the printer is online and ready. 
+The computer will know that it does not have to send data when the printer 
+select signal is logic 0 since it is not ready. In order to verify whether the 
+data is ready on the parallel port signal –Strobe Signal (-STR) is used. It is 
+used to accept the data from the peripheral and store it on the printer’s 
+internal buffer for processing. In order to delay the computer from sending 
+the data until the printer is ready Busy signal (BSY) is used. When a strobe 
+signal is received by the peripheral, it drives the busy signal to logic 1. This 
+remains at logic 1 until the printer is ready for next byte. Busy signals can 
+indeterminately delay the computer when peripheral error occurs. For 
+example, whenever the paper gets stuck in the printer or paper is exhausted 
+or ribbon is jammed, it remains at logic 1 for a long time. Whenever the 
+printer has to communicate to the computer that it is ready to receive 
+another character it uses Acknowledge signal (ACK) which is active low 
+signal.
+9.2.2 Port operation
+Printer is placed online by parallel data transfer. Initially busy signal must be 
+logic 0, strobe signal and acknowledge signal must be logic 1. This is the 
+indication that the printer is ready to accept one byte of data. When the
+printing is initiated, it checks the status of the printer setting and the CPU 
+polls the desired LPT (Line print terminal) port. LPT is the original form and 
+still commonly used as parallel port interface. If the status shows ready then 
+a byte of data is written to the data register and passed to the peripheral.
+Data must be valid for at least 0.5 µS (microsecond) before the strobe signal 
+is set to logic 0. Printer responds with the Busy signal by returning a logic 
+one. This changes the status of the port. The strobe pulse must lasts for at 
+least 1.0µS. Data must be held at least 0.5 µS after the strobe signal is 
+passed. This timing indicates that it has enough time to receive data. It is 
+the minimum requirement of the connector that the data must be valid for 
+minimum of 0.5 µS below which is the time not sufficient enough to receive 
+the data. Computer stops sending data now since the Busy signal is logic 1 
+and previous data is still being processed. Timing diagrams are the artefacts
+that are used to explore the behaviours of one or more objects throughout a 
+given period of time.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 175
+Figure 9.3: Typical timing diagram of a parallel port
+Busy signal is set to logic 0 after the data byte is processed by the printer. 
+Acknowledge signal with logic 1 is sent to the computer indicating that it is 
+ready to receive the data. This is shown in the timing diagram in figure 9.3
+which illustrates this theory. The printer sets busy signal high when it is 
+processing a character after the select signal in the initialise mode. Once the 
+busy signal is low that means when the printing of a character is done, it set 
+the acknowledge signal high and request the printer for new data to send.
+In the mode of printing, after the printer line receives a character for printing 
+request, the character bits are put on the data line. Busy signal is tested 
+repeatedly until it is found to be low, then the strobe signal is sent. The 
+printer set busy signals high when the character data have been latched and 
+sets it low again when the character has been processed. Once the busy 
+signal is low the acknowledge signal is set high indicating the new data 
+request. In the diagram you can find the three major types of signals 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 176
+responsible for the complete processing of printing a series of character 
+they are initialise signals, data transfer signals and error signals. Once the 
+acknowledge signal is set high in the data transfer signal a new data can 
+come on the data line that is represented by new data available label in the 
+data signal.
+Suppose if the printer container has exhausted with paper or paper is struck 
+the error signal indicates the paper out by selecting the paper out signal 
+high. This paper out signal remains high until the paper is replaced or paper 
+is loaded. Once the paper is loaded the paper out signal is set to low and 
+select signal sends the data to the printer. Once a select signal is low the 
+busy signal in the error mode will be high indicating the process of printing.
+In diagram 9.3, one complete cycle can take a bit over 1mS (millisecond).
+Advanced Parallel port
+It is very easy to understand the appeal of a parallel port because you just 
+need to plug into the 25-pin D-type connector and it is ready to run. It works 
+on the concept of plug and play. The parallel port has evolved to improved
+modes which are of different types like unidirectional port, “Type 1” 
+bidirectional port, and “Type 3” bidirectional port. 
+Unidirectional ports: this mode was used in earlier parallel port. As the 
+name indicates this port is used to send data from the PC to the printer 
+device. For most of the general purpose computers unidirectional port was 
+enough for communication. 
+“Type 1” bidirectional ports: Bidirectional ports were used to send and 
+receive data from computer to printer and vice-versa. Though the 
+bidirectional port is not faster than unidirectional port it came into existence 
+because of its ability to send data back to the PC which made the use of the 
+parallel port to connect to other peripherals besides printers. 
+“Type 3” bidirectional ports: This mode attempted to increase the 
+throughput of the parallel port by using Direct Memory access (DMA) 
+techniques. This approach allowed the CPU to define a block of memory to 
+be sent. A DMA controller takes over control from the CPU and sends and 
+receives the data without the intervention of CPU which results in faster data 
+transfers. This port removed the problem of slower performance of 
+bidirectional port due to the intervention of CPU for the transfer of data. 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 177
+9.2.3 IEEE 1284 Modes 
+By the end of 1980s it was clear that the conventional bidirectional ports 
+were not adequate to handle faster peripherals. Therefore, a group of major 
+PC manufacturers formed the Network Printing Alliance (NPA) which 
+attempted to develop a new architecture. Later IEEE joined with NPA and 
+released a standard for bidirectional parallel peripheral interface signalling 
+method which was named as IEEE standard 1284. 
+The IEEE 1284 standard is a standard set by IEEE and NPA for connecting 
+a computer to peripheral devices over a parallel physical and electrical 
+interface. IEEE allows data to flow in one direction, from computer to 
+peripheral as well as it supports bi-directional data flow.
+IEEE 1284 specifies 5 standard modes of operation in it, each of them 
+specifying the data transfer from either printer to computer, computer to 
+printer or bidirectional flow. The five modes are:
+Compatibility mode: This mode is used to define the basic protocol used in 
+the computers to transfer data from computer to printer. It is also called as 
+Centronics mode. It was mainly designed to serve the dot matrix and older 
+laser printers. In this mode, data is kept on the data signal and status is 
+checked for errors and busy signals. When this is clear strobe signal is 
+initiated to send the data to the printer. In this mode it carries data rate up to 
+150 bytes/second at 6 meter or 20 ft. with an AB-cable or up to 150 kbps at 
+10 meter or 32.8 ft. with a CC-cable (composite connector which is used to 
+connect newer peripherals, wiring between the connectors in a cable and 
+connecting the board to the parallel port of the PC). The drawback of this 
+mode is that there is a serious problem in communicating with LAN (Local 
+Area Network) adapters, removable disk drives and the newest generation 
+of laser printers.
+Nibble mode: this mode allows reverse data transfer to the computer. 
+Combining with compatibility mode it can create bidirectional data transfer 
+line. As nibble is half byte (4 bits) of the data units nibble mode is capable of 
+sending 2 nibble of data from peripheral to the computer in two data transfer 
+cycles. Nibble mode is best suited for printers and can operate on all PCs 
+that have a parallel port. It does not have much effect on low bandwidth but 
+may not support it when used with other bidirectional devices other than 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 178
+printers. This mode carries data rate up to 50 kbps at 6 meter or 20 ft. with a 
+CC-cable which can be increased to up to 150 kbps at 10 meter or 32.6 ft.
+Byte mode: this mode requires software drivers to disable the drivers that 
+control the data signals so that data can be sent from the printer to the 
+computer. The data is sent at the same speed as sent from the computer to 
+the printer. This mode is able to send one byte (8 bits) of data transfer and 
+when combined with compatibility mode can create bidirectional data 
+transfer line. It carries data rate up to 500 kbps at 10 meter or 32.8 ft. with 
+CC-cables.
+ECP mode: Extended Capability Port mode is an advanced mode for 
+communication between printers and scanners which allows data 
+compression for images and FIFO facility for items in queue. ECP provides 
+high performance bidirectional path between computer and the peripheral. 
+And supports data rates up to 2 to 4 MB per second. The features of ECP 
+mode are:
+Run length encoding (RLE) data compression for host system’s LPT port.
+FIFO buffers for both forward and backward channels.
+Feature of channel addressing is used for multifunction logical devices
+within a single physical device such as printer/fax/modem devices. For 
+example, In a printer/fax/modem device, where a single parallel port is 
+connected to a peripheral device using channel address software driver of
+ECP mode, you can assign a new channel to the modem while the printer is 
+still busy in printing a high resolution image. 
+This mode carries data rate up to 500 kbps at 1 Mbps at 6 meter or 20ft. or 
+10 meter or 32.8 ft. with CC-cables.
+EPP mode: Enhanced Parallel Port mode was designed to provide a highperformance parallel interface which could be used with the standard 
+interface. The EPP mode uses one ISA I/O cycle that transfers data 
+between the computer and the peripheral devices. This allows data transfer 
+rate at the speed of 500 KB to 2MB per second, depending on the speed of 
+the slowest interface. The EPP mode is bi-directional. and suitable for 
+network adapters, data acquisition, portable hard drives, and other devices 
+that need speed.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 179
+It uses single instruction to transfer data to or from the PC. Moreover, the 
+EPP protocol provides a high degree of coupling between the peripheral 
+driver and the peripheral devices. 
+IEEE issues
+While IEEE might be appealing, there are some serious considerations to be 
+kept in mind while dealing with it. You must specifically ensure that you 
+have IEEE 1284 complaint parallel port, cable and peripheral devices like 
+printer, tape drives, hard drive and so on. The main problem in using IEEE 
+port is using the specific printer cable with older dot matrix printer. To benefit 
+from IEEE you must have at least IEEE 1284 cable and a device with 
+significant memory capacity such as a laser printer. 
+The computer must be able to determine the features of the peripheral that 
+is connected to it so that it can choose the mode of standard. Therefore, a 
+method called negotiation was developed to determine these factors. 
+Negotiation is a series of events that exists on the parallel port interface and 
+used to determine the requirement of type of mode for the device. For older 
+device compatibility, mode is selected for operation as it does not respond 
+to negotiation. 
+Self Assessment Questions
+1. ______________ is a device that is used to connect and
+communicated between computer and printer.
+2. Data registers are called as ______________.
+3. ______________ is any time varying quantity which is generated to
+produce the interrupt.
+4. IEEE joined with ______________ released a standard for bidirectional
+parallel port.
+9.3 Troubleshooting
+Though the parallel port is a very simple device it can throw some huge
+challenges. Although the easiest way would be to replace a port whenever 
+there is a problem in it, the following tips might help you to detect any 
+problem in the mother port before you do so. There are three options before 
+you: 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 180
+South Bridge chip that supports the parallel port can be replaced. Though 
+this can be economical it is not common practical solution.
+Set the jumpers to disable the faulty parallel port and install a multi 
+expansion I/O slot to take its place. This offers a cheap, fast fix for a 
+defective parallel port. 
+Motherboard can be replaced. This is a simple but very expensive option. 
+This is the last solution for any technician when the parallel port is defective.
+9.3.1 Preventing parallel port trouble
+Though the parallel port is very a simple device it is important for you to 
+address some common issues that manifest themselves regularly. The 
+following points could be considered before identifying the problem: 
+Cable: As a cheap or damaged cable can cause serious problem it is 
+essential that you ensure that the cable length is less than 6 ft. When you 
+suspect a cable problem try connecting a different cable or a good known 
+cable. In most cases using the IEEE 1284 cable will solve the problem.
+Port mode: you need to choose a right mode for the right device. Not all the 
+parallel ports operate well on ECP or EPP modes. In case of defects or 
+problems in the printer try changing the mode to compatibility mode or any 
+standard mode in the CMOS setup. In high end devices you need to specify 
+the setting as ECP or EPP to get full functionality of the port.
+Hardware conflicts: It is very common to have a conflict if the system uses 
+second LPT port (LPT2) for IRQ5 because it is mostly used up by sound 
+boards. The line print terminal (LPT) was designed to operate text printer. If
+you have two or more LPT ports in the system, then you need to configure 
+the sound boards to use another IRQ or to remove the sound board entirely.
+Printer driver conflicts: This problem is common when you use certain 
+parallel port devices such as Iomega Zip drives, SyQuest SyJet drives etc.
+The parallel port receives the special reserved non printable characters by 
+these drives. This signals the drive that the next data is for the drive and not 
+for the printer. This situation can cause conflicts between the drivers and 
+each unit might appear like a defective system. Therefore, by using one LPT 
+port for the parallel port drive and another LPT port for the printer will 
+resolve the above mentioned conflict. 
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 181
+Printer monitoring software: printer monitoring may also cause conflict in 
+drivers. Some printers have status drivers that monitor the printer status. 
+When such printers are connected to the pass-through port of the parallel 
+port, they may disable the printer monitoring drive and also corrupt the data 
+resulting in system problem. Therefore, you should disable the status 
+communication which does not affect the printing. 
+9.3.2 Configuration of parallel port device under Windows 
+There are some common issues that arise while configuring the parallel port 
+device under Windows which are categorized as follows: 
+Cabling problems: suitable cable must be used for the parallel port and the 
+device. Try to connect the device directly to the parallel port if you have 
+switch box or pass-through type of connector between the port and the 
+device. You could also try to accommodate the additional device if you have 
+any other peripherals device other than printer by setting up the additional 
+parallel port on your computer. 
+Port disabled: check the status of the parallel port by rebooting the PC and 
+selecting the CMOS setup. LPT port must be enabled and particular IRQ 
+must be assigned to the port. For example IRQ7 for LPT 1 or IRQ 5 for LPT 
+2. In the Bios listing IRQ5 is available and the default IRQ is used for sound
+card. If the sound card is not used the network card and LP2 are often set to
+the IRQ5 as it support the secondary parallel port devices. IRQ7 is typically
+for primary parallel port. If the parallel port is not used then IRQ7 can be
+assigned to another LPT1 device or any primary device.
+Port configured improperly: In CMOS setup, check the parallel port mode
+to ensure that compatibility mode or standard mode is set for basic printers 
+and high end printers which may need ECP or EPP mode to function 
+properly. 
+Disable any status monitors: you need to disable any status monitoring 
+software on the system. Also, Windows startup folder needs to be checked
+during the boot time. You need to disable real-mode software by remarking 
+out the offending command line in CONFIG.SYS or AUTOEXEC.BAT.
+Wrong mode set for parallel port device: you should ensure that the 
+printer is not set to plug-and-play mode.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 182
+Check and correct any IRQ conflicts: Check and correct IRQ conflicts. 
+You need to verify that a particular IRQ allocated to a parallel port is not 
+used by any other device. This kind of setting is a problem with sound board 
+and IRQ 5. You need to remove or reconfigure the device which has 
+conflicts. For example, consider a SyQuest drive. If you have no SCSI 
+controllers listed, then it indicates that a SyQuest Windows driver is
+prevented from loading, indicating an IRQ conflict. 
+Check and remove any similar device drivers: whenever you upgrade a 
+parallel port device ensure that the older driver is removed so that there is 
+no interference with the new device drivers. For example, if you have 
+upgraded your Windows with SyQuest Windows’s parallel port drivers and 
+another removable media device such as tape backup running a device 
+drive on older Windows, this will compete with the newer drive and prevent 
+the SyQuest drive from installing properly under Windows. In that case you 
+need to remove or uninstall any device drivers or software related to old 
+parallel port device and then reinstall the new device drivers. 
+Activity 1:
+How will you troubleshoot when you hear a beep code or see a POST 
+error indicating a parallel port?
+Hint: Refer the concept of symptom of parallel port in the book on 
+troubleshooting, maintaining, and repairing PCs by S. J. Bigelow
+Self Assessment Questions
+5. State whether the following statements are true or false.
+a. There will be serious problem in the port if you use a cheap cable.
+b. You should enable the status monitor software when there is a
+problem in the port.
+6. ECP stands for ______________.
+9.4 Summary
+Parallel port is a device which is used to connect and communicate between 
+computer and other peripheral devices. Parallel port interface is one of the 
+simplest and straight forward circuits in the PC. It consists of three registers 
+which perform specific functions: they are data register, status register and 
+control register.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 183
+While accessing the printer, the system CPU loads the port data register 
+with the value to be passed. In this unit you studied the different types of 
+signals which are responsible for transferring the data from the computer to 
+the peripheral device which is mostly a printer. You also discussed the 
+operation of the parallel port with the help of different kinds if signals which 
+have been represented with the help of parallel port timing diagram. Apart 
+from these, a comparison between the various parallel port modes such as 
+unidirectional port and bidirectional ports were made in this unit. 
+You have not only come to know the standard used in new peripheral 
+device and its different mode components but also discussed how to 
+prevent the parallel port from experiencing any problem, but if problems to 
+occur then how to troubleshoot in the Windows configuration.
+9.5 Glossary
+Term Description
+LPT port Line print terminal is the original form and still commonly 
+used as parallel port interface
+Centronics 
+mode
+This is one of the conventional methods of transferring data 
+to the printer in which it does not have handshaking 
+mechanism. therefore we need to react fast to the data send 
+by the host
+Handshaking 
+signals
+They are bidirectional protocol used between sender and 
+receiver to acknowledge the sender that the data is received
+Nibble One nibble is equal to 4 bits or half byte
+Byte One byte is equal to 8 bits or double the nibble
+D-type female
+connector
+The D-subminiature or D-sub is a common type of electrical 
+connector used particularly in computers. In D type connector 
+D is the prefix for the whole series that denotes the shell size 
+(A=15 pin, B=25 pin, C=37 pin, D=50 pin, E=9 pin), followed 
+by the actual number of pins, followed by the gender.
+9.6 Terminal Questions
+1. Explain the operation of the parallel port in detail.
+2. Differentiate between different nodes of IEEE 1284 standard.
+Understanding PC and Troubleshooting Unit 9
+Manipal University Jaipur B1416 Page No.: 184
+3. How will you resolve the problem of Windows configuration through
+troubleshooting?
+9.7 Answers
+Self Assessment Questions
+1. Parallel Port
+2. Bidirectional
+3. Signal
+4. NPA
+5. a) True
+b) False
+6. Extend Capability Port
+Terminal Questions
+1. Refer sec 9.2.2 Port Operation
+2. Refer sec 9.2.3 IEEE 1284 modes
+3. Refer sec 9.3 Troubleshooting
+References:
+ Trouble shooting, maintaining and repairing PCs, the 1st author in PC
+hardware, 5th edition by Stephen J. Bigelow, Tata McGraw Hill
+Publications, 2001
+ Upgrading and repairing PCs, 15th anniversary edition by Scott Mueller,
+Que publishing, 2003
+E-References:
+ http://eetd.lbl.gov/EA/Reports/39466/
+ http://www.microsoft.com/windowsxp/using/setup/learnmore/russel_
+02march25.mspx
+ http://www.tech-faq.com/configuring-power-management.html
+ http://www.microsoft.com/windowsxp/using/setup/learnmore/russel_
+02march25.mspx
+ http://courses.engr.illinois.edu/ece390/books/labmanual/parallelcomm.html
+ http://whatis.techtarget.com/definition/0,,sid9_gci213469,00.html
+ http://ckp.made-it.com/ieee1284.html
